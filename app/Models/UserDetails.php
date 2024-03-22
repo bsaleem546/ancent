@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserDetails extends Model
 {
@@ -30,7 +32,7 @@ class UserDetails extends Model
      * @param  none
      * @return OneToOne relationship
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -41,10 +43,10 @@ class UserDetails extends Model
      * @param  none
      * @return OneToOne relationship
      */
-//    public function customer()
-//    {
-//        return $this->hasOne(Customer::class, 'id', 'customer_id');
-//    }
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
 
     /**
      * The one to one relationship between user and customers tables
@@ -52,8 +54,8 @@ class UserDetails extends Model
      * @param  none
      * @return OneToOne relationship
      */
-//    public function operator()
-//    {
-//        return $this->hasOne(Operator::class, 'id', 'operator_id');
-//    }
+    public function operator(): HasOne
+    {
+        return $this->hasOne(Operator::class, 'id', 'operator_id');
+    }
 }

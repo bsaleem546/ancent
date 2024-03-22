@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Traits\Filters\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Invoice extends Model
@@ -32,10 +34,10 @@ class Invoice extends Model
      * @param  none
      * @return OneToOne relationship
      */
-//    public function repair()
-//    {
-//        return $this->belongsTo(Repair::class);
-//    }
+    public function repair(): BelongsTo
+    {
+        return $this->belongsTo(Repair::class);
+    }
 
     /**
      * The one to one relationship between invoice and company
@@ -43,10 +45,10 @@ class Invoice extends Model
      * @param  none
      * @return OneToOne relationship
      */
-//    public function company()
-//    {
-//        return $this->hasOne(Company::class, 'id', 'company_id');
-//    }
+    public function company(): HasOne
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
+    }
 
     /**
      * The one to one relationship between invoice and users
@@ -66,10 +68,10 @@ class Invoice extends Model
      * @param  none
      * @return OneToOne relationship
      */
-//    public function customer()
-//    {
-//        return $this->hasOne(Customer::class, 'id', 'customer_id')->with('customerRates', 'validCustomerRates');
-//    }
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id')->with('customerRates', 'validCustomerRates');
+    }
 
     /**
      * The one to many relationship between invoice and extra services tables
@@ -77,10 +79,10 @@ class Invoice extends Model
      * @param  none
      * @return OneToMany relationship
      */
-//    public function extraServices()
-//    {
-//        return $this->hasMany(ExtraService::class)->orderByRaw("0 - position desc")->with('unit');
-//    }
+    public function extraServices(): HasMany
+    {
+        return $this->hasMany(ExtraService::class)->orderByRaw("0 - position desc")->with('unit');
+    }
 
     /**
      * Sync rates.
@@ -167,11 +169,11 @@ class Invoice extends Model
      * @param  none
      * @return string
      */
-//    public function getVATForInvoiceDate()
-//    {
-//        $vat = Vat::getVATForDate($this->invoice_date ? $this->invoice_date : Carbon::now());
-//        return $vat*100;
-//    }
+    public function getVATForInvoiceDate()
+    {
+        $vat = Vat::getVATForDate($this->invoice_date ? $this->invoice_date : Carbon::now());
+        return $vat*100;
+    }
 
     /**
      * Get the VAT value for repair date
@@ -179,11 +181,11 @@ class Invoice extends Model
      * @param  none
      * @return string
      */
-//    public function getVATForRepairDate()
-//    {
-//        $vat = Vat::getVATForDate($this->repair->repair_date ? $this->repair->repair_date : Carbon::now());
-//        return $vat*100;
-//    }
+    public function getVATForRepairDate()
+    {
+        $vat = Vat::getVATForDate($this->repair->repair_date ? $this->repair->repair_date : Carbon::now());
+        return $vat*100;
+    }
 
     /**
      * Get the VAT value for offer date
@@ -191,9 +193,9 @@ class Invoice extends Model
      * @param  none
      * @return string
      */
-//    public function getVATForOfferDate()
-//    {
-//        $vat = Vat::getVATForDate($this->offer_date ? $this->offer_date : Carbon::now());
-//        return $vat*100;
-//    }
+    public function getVATForOfferDate()
+    {
+        $vat = Vat::getVATForDate($this->offer_date ? $this->offer_date : Carbon::now());
+        return $vat*100;
+    }
 }

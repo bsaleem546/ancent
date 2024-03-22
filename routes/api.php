@@ -104,4 +104,56 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     #endregion
 
+    #region Repairs CRUD routes
+    Route::group(['middleware' => ['role_or_permission:super_user|read repairs']], function () {
+        Route::post('all_repairs', [RepairController::class, 'getAll']);
+        Route::post('all_repairs_min_data', [RepairController::class, 'getAllMinData']);
+        Route::get('repair/{id}', [RepairController::class, 'show']);
+        Route::post('get_repair', [RepairController::class, 'showP']);
+        Route::post('get_repairs_by_ids', [RepairController::class, 'getRepairsByIds']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|write repairs|create repair_details|write repair_details']], function () {
+        Route::post('repair/update', [RepairController::class, 'update']);
+        Route::post('repair/generate_invoice', [RepairController::class, 'generateInvoice']);
+        Route::post('repair/generate_offer', [RepairController::class, 'generateOffer']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|create repairs']], function () {
+        Route::post('repair/create', [RepairController::class, 'store']);
+        Route::post('repair/create_related_repair', [RepairController::class, 'createRelatedRepair']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|delete repairs']], function () {
+        Route::post('repair/delete/{id}', [RepairController::class, 'destroy']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|create repair_details|write repair_details']], function () {
+        Route::post('update_repair_schedule', [RepairController::class, 'updateSchedule']);
+        Route::post('delete_repair_schedule', [RepairController::class, 'deleteSchedule']);
+        Route::post('update_scheduled_employees', [RepairController::class, 'updateRepairScheduledEmployees']);
+        Route::post('update_estimation', [RepairController::class, 'updateEstimation']);
+    });
+    #endregion
+
+    #region Invoices CRUD routes
+    Route::group(['middleware' => ['role_or_permission:super_user|read repairs']], function () {
+        Route::post('all_invoices', [InvoiceController::class, 'getAll']);
+        Route::get('invoice/{id}', [InvoiceController::class, 'show']);
+        Route::post('get_invoice', [InvoiceController::class, 'showP']);
+        Route::post('get_invoices_by_ids', [InvoiceController::class, 'getInvoicesByIds']);
+        Route::post('get_invoices_for_pdf_by_ids', [InvoiceController::class, 'getInvoicesForPdfByIds']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|write repairs|create repair_details|write repair_details']], function () {
+        Route::post('invoice/update', [InvoiceController::class, 'update']);
+        Route::post('invoice/generate_invoices_for_ids', [InvoiceController::class, 'generateInvoicesForIds']);
+        //fixme this route controller is not available
+        Route::post('invoice/generate_offer', [InvoiceController::class, 'generateOffer']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|create repairs']], function () {
+        Route::post('invoice/store', [InvoiceController::class, 'store']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|delete repairs']], function () {
+        Route::post('invoice/delete/{id}', [InvoiceController::class, 'destroy']);
+    });
+    Route::group(['middleware' => ['role_or_permission:super_user|create repair_details|write repair_details']], function () {
+        Route::post('invoice/update_payment_date', [InvoiceController::class, 'updatePaymentDate']);
+    });
+    #endregion
 });

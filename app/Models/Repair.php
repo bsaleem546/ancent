@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Traits\Filters\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Repair extends Model
@@ -30,10 +32,10 @@ class Repair extends Model
      * @param none
      * @return OneToMany relationship
      */
-//    public function equipment()
-//    {
-//        return $this->belongsTo(Equipment::class)->with('equipmentType', 'equipmentManufacturer', 'location', 'customer', 'operator', 'equipmentLocationHistory');
-//    }
+    public function equipment(): BelongsTo
+    {
+        return $this->belongsTo(Equipment::class)->with('equipmentType', 'equipmentManufacturer', 'location', 'customer', 'operator', 'equipmentLocationHistory');
+    }
 
     /**
      * The one to one relationship between repair and company
@@ -41,10 +43,10 @@ class Repair extends Model
      * @param none
      * @return OneToOne relationship
      */
-//    public function company()
-//    {
-//        return $this->hasOne(Company::class, 'id', 'company_id');
-//    }
+    public function company(): HasOne
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
+    }
 
     /**
      * The one to one relationship between repair and location
@@ -52,10 +54,10 @@ class Repair extends Model
      * @param none
      * @return OneToOne relationship
      */
-//    public function repairLocation()
-//    {
-//        return $this->hasOne(Location::class, 'id', 'location_id');
-//    }
+    public function repairLocation(): HasOne
+    {
+        return $this->hasOne(Location::class, 'id', 'location_id');
+    }
 
     /**
      * The one to one relationship between repair and customer
@@ -63,10 +65,10 @@ class Repair extends Model
      * @param none
      * @return OneToOne relationship
      */
-//    public function repairCustomer()
-//    {
-//        return $this->hasOne(Customer::class, 'id', 'customer_id')->with('customerRates', 'validCustomerRates');
-//    }
+    public function repairCustomer(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id')->with('customerRates', 'validCustomerRates');
+    }
 
     /**
      * The one to one relationship between repair and operator
@@ -74,10 +76,10 @@ class Repair extends Model
      * @param none
      * @return OneToOne relationship
      */
-//    public function repairOperator()
-//    {
-//        return $this->hasOne(Operator::class, 'id', 'operator_id');
-//    }
+    public function repairOperator(): HasOne
+    {
+        return $this->hasOne(Operator::class, 'id', 'operator_id');
+    }
 
     /**
      * The one to one relationship between repair and rate
@@ -85,10 +87,10 @@ class Repair extends Model
      * @param none
      * @return OneToOne relationship
      */
-//    public function rate()
-//    {
-//        return $this->hasOne(CustomerRates::class, 'id', 'rate_id');
-//    }
+    public function rate(): HasOne
+    {
+        return $this->hasOne(CustomerRates::class, 'id', 'rate_id');
+    }
 
     /**
      * The one to one relationship between repairs and users
@@ -107,10 +109,10 @@ class Repair extends Model
      * @param none
      * @return OneToMany relationship
      */
-//    public function scheduledEmployees()
-//    {
-//        return $this->hasMany(ScheduledEmployee::class);
-//    }
+    public function scheduledEmployees(): HasMany
+    {
+        return $this->hasMany(ScheduledEmployee::class);
+    }
 
     /**
      * The one to many relationship between repairs and time_tracking tables
@@ -118,10 +120,10 @@ class Repair extends Model
      * @param none
      * @return OneToMany relationship
      */
-//    public function timeTracking()
-//    {
-//        return $this->hasMany(TimeTracking::class)->with('employee');
-//    }
+    public function timeTracking(): HasMany
+    {
+        return $this->hasMany(TimeTracking::class)->with('employee');
+    }
 
     /**
      * The one to many relationship between repairs and customer_invoicing tables
@@ -129,10 +131,10 @@ class Repair extends Model
      * @param none
      * @return OneToMany relationship
      */
-//    public function customerInvoicing()
-//    {
-//        return $this->hasMany(CustomerInvoicing::class)->with('employee');
-//    }
+    public function customerInvoicing(): HasMany
+    {
+        return $this->hasMany(CustomerInvoicing::class)->with('employee');
+    }
 
     /**
      * The one to many relationship between repairs and repair_replacements tables
@@ -140,10 +142,10 @@ class Repair extends Model
      * @param none
      * @return OneToMany relationship
      */
-//    public function repairReplacements()
-//    {
-//        return $this->hasMany(RepairReplacement::class)->orderBy("position", 'asc')->with('unit');
-//    }
+    public function repairReplacements(): HasMany
+    {
+        return $this->hasMany(RepairReplacement::class)->orderBy("position", 'asc')->with('unit');
+    }
 
     /**
      * The one to one relationship between repair and invoice
@@ -269,9 +271,9 @@ class Repair extends Model
      * @param none
      * @return string
      */
-//    public function getVATForDate($date)
-//    {
-//        $vat = Vat::getVATForDate($date);
-//        return $vat;
-//    }
+    public function getVATForDate($date)
+    {
+        $vat = Vat::getVATForDate($date);
+        return $vat;
+    }
 }
