@@ -27,8 +27,8 @@ class ReplacementResource extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount,
             // Send the price every time
-            // 'price' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), $this->price),
-            // 'discount' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), $this->discount),
+            // 'price' => $this->when($loggedUser->CP('access_prices_offer'), $this->price),
+            // 'discount' => $this->when($loggedUser->CP('access_prices_offer'), $this->discount),
             'unit' => $this->unit && $this->unit->name ? $this->unit->name : null,
             'unit_id' => $this->unit && $this->unit->id ? $this->unit->id : null,
 

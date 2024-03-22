@@ -69,7 +69,8 @@ class OperatorController extends Controller
             if (isset($request->email)) $operator->email = $request->email;
             if (isset($request->gsm_email)) $operator->gsm_email = $request->gsm_email;
             if (isset($request->notes)) $operator->notes = $request->notes;
-            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
+            if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
+//            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
             if (isset($request->active)) $operator->active = $request->active;
 
             $operator->save();
@@ -111,7 +112,8 @@ class OperatorController extends Controller
         if (isset($request->email)) $operator->email = $request->email;
         if (isset($request->gsm_email)) $operator->gsm_email = $request->gsm_email;
         if (isset($request->notes)) $operator->notes = $request->notes;
-        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
+        if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
+//        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $operator->internal_notes = $request->internal_notes;
         if (isset($request->active)) $operator->active = $request->active;
 
         $operator->save();

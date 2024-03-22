@@ -16,7 +16,7 @@ class RepairPDFResource extends JsonResource
     public function toArray($request)
     {
         $loggedUser = Auth::user();
-        
+
         return [
             'id' => $this->id,
             'equipment_id' => $this->equipment_id,
@@ -28,19 +28,19 @@ class RepairPDFResource extends JsonResource
             'number' => $this->number,
 
             // Read repairs right required to see these fields
-            $this->mergeWhen($loggedUser->hasPermissionTo('read repairs'), [
+            $this->mergeWhen($loggedUser->CP('read repairs'), [
                 'status' => $this->status,
                 'work_description' => $this->work_description,
                 'offer_needed' => $this->offer_needed,
             ]),
 
             // Only  send the internal_notes if the requesting user has access to internal notes
-            $this->mergeWhen($loggedUser->hasAllPermissions(['access_internal_notes', 'read repairs']), [
+            $this->mergeWhen($loggedUser->CPA(['access_internal_notes', 'read repairs']), [
                 'internal_notes' => (isset($this->internal_notes)) ? $this->internal_notes : "",
             ]),
-            
+
             // Read repair_details right required
-            $this->mergeWhen($loggedUser->hasPermissionTo('read repair_details'), [
+            $this->mergeWhen($loggedUser->CP('read repair_details'), [
                 'repair_details_added' => $this->repair_details_added,
                 'repair_date' => $this->repair_date,
                 'estimation' => $this->estimation,
@@ -55,16 +55,16 @@ class RepairPDFResource extends JsonResource
                 'rate' => $this->rate,
                 'invoicing_needed' => $this->invoicing_needed,
                 'active_travel_cost' => $this->active_travel_cost,
-                'travel_costs' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), number_format($this->travel_costs, 2, ".", "")),
-                'travel_cost_factor' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), number_format($this->travel_cost_factor, 3, ".", "")),
+                'travel_costs' => $this->when($loggedUser->CP('access_prices_offer'), number_format($this->travel_costs, 2, ".", "")),
+                'travel_cost_factor' => $this->when($loggedUser->CP('access_prices_offer'), number_format($this->travel_cost_factor, 3, ".", "")),
                 'active_km' => $this->active_km,
-                'km_costs' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), number_format($this->km_costs, 2, ".", "")),
+                'km_costs' => $this->when($loggedUser->CP('access_prices_offer'), number_format($this->km_costs, 2, ".", "")),
                 'active_per_km' => $this->active_per_km,
                 'km' => number_format($this->km, 2, ".", ""),
-                'costs_per_km' => $this->when($loggedUser->hasPermissionTo('access_prices_offer'), number_format($this->costs_per_km, 2, ".", "")),
+                'costs_per_km' => $this->when($loggedUser->CP('access_prices_offer'), number_format($this->costs_per_km, 2, ".", "")),
                 'active' => $this->active,
             ]),
-            
+
             'created_at' => date('Y-m-d',strtotime($this->created_at)),
 
             // Do not send this info for now, keep it light
@@ -72,10 +72,10 @@ class RepairPDFResource extends JsonResource
             'company' => $this->company,
             'user' => new User($this->user),
             'pdf_user' => new User($loggedUser),
-            $this->mergeWhen($loggedUser->hasPermissionTo('read repair_details'), [
-                'location' => $this->when($loggedUser->hasPermissionTo('read locations'), new LocationResource($this->repairLocation)),
-                'customer' => $this->when($loggedUser->hasPermissionTo('read customers'), new CustomerResource($this->repairCustomer)),
-                'operator' => $this->when($loggedUser->hasPermissionTo('read operators'), new OperatorResource($this->repairOperator)),
+            $this->mergeWhen($loggedUser->CP('read repair_details'), [
+                'location' => $this->when($loggedUser->CP('read locations'), new LocationResource($this->repairLocation)),
+                'customer' => $this->when($loggedUser->CP('read customers'), new CustomerResource($this->repairCustomer)),
+                'operator' => $this->when($loggedUser->CP('read operators'), new OperatorResource($this->repairOperator)),
                 'time_tracking' => TimeTrackingResource::collection($this->timeTracking),
                 'customer_invoicing' => CustomerInvoicingResource::collection($this->customerInvoicing),
                 'repair_replacements' => RepairReplacementResource::collection($this->repairReplacements),

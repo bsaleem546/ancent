@@ -10,7 +10,7 @@ class EquipmentMinResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -18,7 +18,7 @@ class EquipmentMinResource extends JsonResource
         return [
             'id' => $this->id,
             'number' => $this->number,
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read locations'), [
+            $this->mergeWhen(Auth::user()->CP('read locations'), [
                 'location' => $this->location && $this->location->name ? $this->location->name : null,
             ])
         ];

@@ -29,11 +29,11 @@ class LocationResource extends JsonResource
             'gsm_email' => $this->gsm_email,
             'notes' => (isset($this->notes)) ? $this->notes : "",
             // Only  send the internal_notes if the requesting user has access to internal notes
-            $this->mergeWhen(Auth::user()->hasPermissionTo('access_internal_notes'), [
+            $this->mergeWhen(Auth::user()->CP('access_internal_notes'), [
                 'internal_notes' => (isset($this->internal_notes)) ? $this->internal_notes : "",
             ]),
             'special_features' => (isset($this->special_features)) ? $this->special_features : "",
-            $this->mergeWhen(Auth::user()->hasAllPermissions(['access_prices_offer']), [
+            $this->mergeWhen(Auth::user()->CPA(['access_prices_offer']), [
                 'active_travel_cost' => $this->active_travel_cost,
                 'travel_costs' => $this->travel_costs,
                 'active_km' => $this->active_km,

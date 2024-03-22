@@ -75,13 +75,15 @@ class CustomerController extends Controller
             if (isset($request->fax)) $customer->fax = $request->fax;
             if (isset($request->email)) $customer->email = $request->email;
             if (isset($request->notes)) $customer->notes = $request->notes;
-            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
+            if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
+//            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
             if (isset($request->id_rw)) $customer->id_rw = $request->id_rw;
             if (isset($request->vat_id)) $customer->vat_id = $request->vat_id;
             if (isset($request->invoice_prefix)) $customer->invoice_prefix = $request->invoice_prefix;
             if (isset($request->accounting_area)) $customer->accounting_area = $request->accounting_area;
             if (isset($request->supplier_number)) $customer->supplier_number = $request->supplier_number;
-            if (isset($request->discount) && Auth::user()->hasAllPermissions(['access_prices_offer'])) $customer->discount = $request->discount;
+            if (isset($request->discount) && Auth::user()->CPA(['access_prices_offer'])) $customer->discount = $request->discount;
+//            if (isset($request->discount) && Auth::user()->hasAllPermissions(['access_prices_offer'])) $customer->discount = $request->discount;
             if (isset($request->active)) $customer->active = $request->active;
 
             $customer->save();
@@ -106,7 +108,8 @@ class CustomerController extends Controller
             }
 
             // Handle any customer rates updates
-            if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
+            if (Auth::user()->CPA(['access_prices_offer'])) {
+//                if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
                 $ratesSync = $customer->syncRates($request->customer_rates);
                 error_log("Synced rates: " . json_encode($ratesSync));
             }
@@ -147,20 +150,24 @@ class CustomerController extends Controller
         if (isset($request->fax)) $customer->fax = $request->fax;
         if (isset($request->email)) $customer->email = $request->email;
         if (isset($request->notes)) $customer->notes = $request->notes;
-        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
+        if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
+//        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $customer->internal_notes = $request->internal_notes;
         if (isset($request->id_rw)) $customer->id_rw = $request->id_rw;
         if (isset($request->vat_id)) $customer->vat_id = $request->vat_id;
         if (isset($request->invoice_prefix)) $customer->invoice_prefix = $request->invoice_prefix;
         if (isset($request->accounting_area)) $customer->accounting_area = $request->accounting_area;
         if (isset($request->supplier_number)) $customer->supplier_number = $request->supplier_number;
-        if (isset($request->discount) && Auth::user()->hasAllPermissions(['access_prices_offer'])) $customer->discount = $request->discount;
+        if (isset($request->discount) && Auth::user()->CPA(['access_prices_offer'])) $customer->discount = $request->discount;
+//        if (isset($request->discount) && Auth::user()->hasAllPermissions(['access_prices_offer'])) $customer->discount = $request->discount;
         if (isset($request->active)) $customer->active = $request->active;
 
         $customer->save();
 
         error_log("Rates: " . json_encode($request->customer_rates));
 
-        if (Auth::user()->hasAllPermissions(['access_prices_offer']) && (!is_null($request->customer_rates)) && is_array($request->customer_rates) && count($request->customer_rates) > 0) {
+//        if (Auth::user()->hasAllPermissions(['access_prices_offer']) &&
+        if (Auth::user()->CPA(['access_prices_offer']) &&
+            (!is_null($request->customer_rates)) && is_array($request->customer_rates) && count($request->customer_rates) > 0) {
             $customer->customerRates()->createMany($request->customer_rates);
         }
 

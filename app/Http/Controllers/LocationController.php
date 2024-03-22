@@ -76,9 +76,11 @@ class LocationController extends Controller
             if (isset($request->email)) $location->email = $request->email;
             if (isset($request->gsm_email)) $location->gsm_email = $request->gsm_email;
             if (isset($request->notes)) $location->notes = $request->notes;
-            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $location->internal_notes = $request->internal_notes;
+            if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $location->internal_notes = $request->internal_notes;
+//            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $location->internal_notes = $request->internal_notes;
             if (isset($request->special_features)) $location->special_features = $request->special_features;
-            if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
+            if (Auth::user()->CPA(['access_prices_offer'])) {
+//                if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
                 if (isset($request->active_travel_cost)) $location->active_travel_cost = $request->active_travel_cost;
                 if (isset($request->travel_costs)) $location->travel_costs = $request->travel_costs;
                 if (isset($request->active_km)) $location->active_km = $request->active_km;
@@ -126,9 +128,11 @@ class LocationController extends Controller
         if (isset($request->email)) $location->email = $request->email;
         if (isset($request->gsm_email)) $location->gsm_email = $request->gsm_email;
         if (isset($request->notes)) $location->notes = $request->notes;
-        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $location->internal_notes = $request->internal_notes;
+        if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $location->internal_notes = $request->internal_notes;
+//        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $location->internal_notes = $request->internal_notes;
         if (isset($request->special_features)) $location->special_features = $request->special_features;
-        if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
+        if (Auth::user()->CPA(['access_prices_offer'])) {
+//            if (Auth::user()->hasAllPermissions(['access_prices_offer'])) {
             if (isset($request->active_travel_cost)) $location->active_travel_cost = $request->active_travel_cost;
             if (isset($request->travel_costs)) $location->travel_costs = $request->travel_costs;
             if (isset($request->active_km)) $location->active_km = $request->active_km;

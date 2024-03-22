@@ -29,7 +29,7 @@ class OperatorResource extends JsonResource
             'gsm_email' => $this->gsm_email,
             'notes' => (isset($this->notes)) ? $this->notes : "",
             // Only  send the internal_notes if the requesting user has access to internal notes
-            $this->mergeWhen(Auth::user()->hasPermissionTo('access_internal_notes'), [
+            $this->mergeWhen(Auth::user()->CP('access_internal_notes'), [
                 'internal_notes' => (isset($this->internal_notes)) ? $this->internal_notes : "",
             ]),
             'active' => $this->active

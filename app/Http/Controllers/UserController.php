@@ -171,9 +171,12 @@ class UserController extends Controller
         if (isset($request->fax)) $userDetails->fax = $request->fax;
         if (isset($request->sms)) $userDetails->sms = $request->sms;
         if (isset($request->notes)) $userDetails->notes = $request->notes;
-        if (isset($request->customer_id) && Auth::user()->hasPermissionTo('read customers')) $userDetails->customer_id = $request->customer_id;
-        if (isset($request->operator_id) && Auth::user()->hasPermissionTo('read operators')) $userDetails->operator_id = $request->operator_id;
-        if (isset($request->customer_operator_filter) && Auth::user()->hasAllPermissions(['read customers', 'read operators'])) $userDetails->customer_operator_filter = $request->customer_operator_filter;
+        if (isset($request->customer_id) && Auth::user()->CP('read customers')) $userDetails->customer_id = $request->customer_id;
+//        if (isset($request->customer_id) && Auth::user()->hasPermissionTo('read customers')) $userDetails->customer_id = $request->customer_id;
+        if (isset($request->operator_id) && Auth::user()->CP('read operators')) $userDetails->operator_id = $request->operator_id;
+//        if (isset($request->operator_id) && Auth::user()->hasPermissionTo('read operators')) $userDetails->operator_id = $request->operator_id;
+        if (isset($request->customer_operator_filter) && Auth::user()->CPA(['read customers', 'read operators'])) $userDetails->customer_operator_filter = $request->customer_operator_filter;
+//        if (isset($request->customer_operator_filter) && Auth::user()->hasAllPermissions(['read customers', 'read operators'])) $userDetails->customer_operator_filter = $request->customer_operator_filter;
 
         $user->userDetails()->save($userDetails);
 

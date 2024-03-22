@@ -151,7 +151,8 @@ class EquipmentController extends Controller
             if (isset($request->customer_id)) $equipment->customer_id = $request->customer_id;
             if (isset($request->operator_id)) $equipment->operator_id = $request->operator_id;
             if (isset($request->notes)) $equipment->notes = $request->notes;
-            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
+            if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
+//            if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
             if (isset($request->active)) $equipment->active = $request->active;
             if (isset($request->maintenance_contract)) $equipment->maintenance_contract = $request->maintenance_contract;
 
@@ -233,7 +234,8 @@ class EquipmentController extends Controller
         if (isset($request->customer_id)) $equipment->customer_id = $request->customer_id;
         if (isset($request->operator_id)) $equipment->operator_id = $request->operator_id;
         if (isset($request->notes)) $equipment->notes = $request->notes;
-        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
+        if (isset($request->internal_notes) && Auth::user()->CP('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
+//        if (isset($request->internal_notes) && Auth::user()->hasPermissionTo('access_internal_notes')) $equipment->internal_notes = $request->internal_notes;
         if (isset($request->active)) $equipment->active = $request->active;
         if (isset($request->maintenance_contract)) $equipment->maintenance_contract = $request->maintenance_contract;
 

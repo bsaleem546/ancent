@@ -18,9 +18,9 @@ class ManualInvoiceResource extends JsonResource
         $loggedUser = Auth::user();
         return [
             'id' => $this->id,
-            
+
             // Read repair_details right required
-            $this->mergeWhen($loggedUser->hasPermissionTo('read repair_details'), [
+            $this->mergeWhen($loggedUser->CP('read repair_details'), [
                 'user_id' => $this->user_id,
                 'user' => new User($this->user),
 
@@ -28,13 +28,13 @@ class ManualInvoiceResource extends JsonResource
                 'invoice_detailed_number' => $this->invoice_detailed_number,
                 'invoice_date' => $this->invoice_date,
                 'delivery_date' => $this->delivery_date,
-                
+
                 'customer_id' => $this->customer_id,
                 // 'customer' => new CustomerResource($this->customer),
-                'customer' => $this->when($loggedUser->hasPermissionTo('read customers'), new CustomerResource($this->customer)),
+                'customer' => $this->when($loggedUser->CP('read customers'), new CustomerResource($this->customer)),
 
                 'invoice_pdf_generated' => $this->invoice_pdf_generated,
-            
+
                 'offer_number' => $this->offer_number,
                 'offer_date' => $this->offer_date,
                 'order_date' => $this->order_date,

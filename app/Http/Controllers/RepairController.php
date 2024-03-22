@@ -106,7 +106,8 @@ class RepairController extends Controller
             // Do not make any updates if the invoice has been generated already
             if ($repair->invoice && $repair->invoice['invoice_pdf_generated']) {
                 error_log("Invoice pdf generated. No updates allowed except internal notes and payment date inside invoice.");
-                if ($loggedUser->hasAnyPermission(['create repair_details', 'write repair_details', 'write repairs'])) {
+                if ($loggedUser->CPA(['create repair_details', 'write repair_details', 'write repairs'])) {
+//                    if ($loggedUser->hasAnyPermission(['create repair_details', 'write repair_details', 'write repairs'])) {
                     if (isset($request->invoice)) {
                         $invoice = $repair->invoice;
                         /* if(isset($request->invoice['payment_date'])) */
@@ -121,7 +122,8 @@ class RepairController extends Controller
                         $repair->invoice()->save($invoice);
                     }
 
-                    if (isset($request->internal_notes) && $loggedUser->hasPermissionTo('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
+                    if (isset($request->internal_notes) && $loggedUser->CP('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
+//                    if (isset($request->internal_notes) && $loggedUser->hasPermissionTo('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
                     $repair->save();
                 }
 
@@ -129,7 +131,8 @@ class RepairController extends Controller
             }
 
             // REPAIRS
-            if ($loggedUser->hasPermissionTo('write repairs')) {
+            if ($loggedUser->CP('write repairs')) {
+//                if ($loggedUser->hasPermissionTo('write repairs')) {
                 if (isset($request->company_id)) $repair->company_id = $request->company_id; // This is one of the Ansent family companies
                 if (isset($request->location_id)) $repair->location_id = $request->location_id;
                 // Save the change of the customer_id so that we can also change the invoice customer_id
@@ -146,12 +149,14 @@ class RepairController extends Controller
                     }
                 }
                 if (isset($request->work_description)) $repair->work_description = $request->work_description;
-                if (isset($request->internal_notes) && $loggedUser->hasPermissionTo('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
+                if (isset($request->internal_notes) && $loggedUser->CP('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
+//                if (isset($request->internal_notes) && $loggedUser->hasPermissionTo('access_internal_notes')) $repair->internal_notes = $request->internal_notes;
                 if (isset($request->offer_needed)) $repair->offer_needed = ($request->offer_needed ? 1 : 0);
             }
 
             // PROTOKOLL (Repair details) create repair_details | write repair_details
-            if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
+            if (($repair->repair_details_added && $loggedUser->CP('write repair_details')) || (!$repair->repair_details_added && $loggedUser->CP('create repair_details'))) {
+//                if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
                 if (isset($request->repair_details_added) && !$repair->repair_details_added) $repair->repair_details_added = $request->repair_details_added;
                 if ((isset($request->repair_date) && !$repair->repair_date) || (isset($request->repair_date) && $repair->repair_date && $repair->repair_date != $request->repair_date)) {
                     $repair->rough_schedule_start = $request->repair_date;
@@ -184,17 +189,22 @@ class RepairController extends Controller
                     $repair->invoicing_needed = null;
                 }
                 if (isset($request->active_travel_cost)) $repair->active_travel_cost = ($request->active_travel_cost ? 1 : 0);
-                if (isset($request->travel_costs) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->travel_costs = floatval($request->travel_costs);
-                if (isset($request->travel_cost_factor) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->travel_cost_factor = floatval($request->travel_cost_factor);
+                if (isset($request->travel_costs) && $loggedUser->CP('access_prices_offer')) $repair->travel_costs = floatval($request->travel_costs);
+//                if (isset($request->travel_costs) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->travel_costs = floatval($request->travel_costs);
+                if (isset($request->travel_cost_factor) && $loggedUser->CP('access_prices_offer')) $repair->travel_cost_factor = floatval($request->travel_cost_factor);
+//                if (isset($request->travel_cost_factor) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->travel_cost_factor = floatval($request->travel_cost_factor);
                 if (isset($request->active_km)) $repair->active_km = ($request->active_km ? 1 : 0);
-                if (isset($request->km_costs) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->km_costs = floatval($request->km_costs);
+                if (isset($request->km_costs) && $loggedUser->CP('access_prices_offer')) $repair->km_costs = floatval($request->km_costs);
+//                if (isset($request->km_costs) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->km_costs = floatval($request->km_costs);
                 if (isset($request->active_per_km)) $repair->active_per_km = ($request->active_per_km ? 1 : 0);
                 if (isset($request->km)) $repair->km = floatval($request->km);
-                if (isset($request->costs_per_km) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->costs_per_km = floatval($request->costs_per_km);
+                if (isset($request->costs_per_km) && $loggedUser->CP('access_prices_offer')) $repair->costs_per_km = floatval($request->costs_per_km);
+//                if (isset($request->costs_per_km) && $loggedUser->hasPermissionTo('access_prices_offer')) $repair->costs_per_km = floatval($request->costs_per_km);
                 if (isset($request->active)) $repair->active = ($request->active ? 1 : 0);
 
                 // Only Update the working hours and the repair replacements if the user has create or write repair details rights
-                if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
+                if (Auth::user()->CPA(['create repair_details', 'write repair_details'])) {
+//                    if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
                     $invoice = $repair->invoice;
                     if (!$invoice) {
                         error_log("Invoice not found. Create new entry.");
@@ -348,7 +358,8 @@ class RepairController extends Controller
                         $invoice->rr_price = $totalRRPrice;
                     }
                 } else {
-                    if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
+                    if (!Auth::user()->CPA(['create repairs', 'write repairs'])) {
+//                        if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
                         $apiData['write repair_details'][] = "time_tracking";
                         $apiData['write repair_details'][] = "customer_invoicing";
                         $apiData['write repair_details'][] = "repair_replacements";
@@ -478,7 +489,8 @@ class RepairController extends Controller
                 $permissionsBreached = false;
                 foreach ($changedFields as $changedField => $newValue) {
                     error_log("Checking updated attribute: " . $changedField);
-                    if (in_array($changedField, $this->repairFields) && !Auth::user()->hasPermissionTo('write repairs')) {
+                    if (in_array($changedField, $this->repairFields) && !Auth::user()->CP('write repairs')) {
+//                        if (in_array($changedField, $this->repairFields) && !Auth::user()->hasPermissionTo('write repairs')) {
                         error_log("Checking updated repair attribute: " . $changedField);
                         $apiData['write repairs'][] = $changedField;
                         $permissionsBreached = true;
@@ -486,7 +498,8 @@ class RepairController extends Controller
 
                     // We need a way to determine if this is a newly created "protokoll" or an update to an already created one
                     // Ask Stan
-                    if (in_array($changedField, $this->repairDetailsFields) && !Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
+                    if (in_array($changedField, $this->repairDetailsFields) && !Auth::user()->CPA(['create repair_details', 'write repair_details'])) {
+//                        if (in_array($changedField, $this->repairDetailsFields) && !Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
                         error_log("Checking updated repair details attribute: " . $changedField);
                         $apiData['write repair_details'][] = $changedField;
                         $permissionsBreached = true;
@@ -526,7 +539,8 @@ class RepairController extends Controller
             $repair = Repair::findOrFail($request->id);
             $loggedUser = Auth::user();
             // Invoice (Repair details) create repair_details | write repair_details
-            if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
+            if (($repair->repair_details_added && $loggedUser->CP('write repair_details')) || (!$repair->repair_details_added && $loggedUser->CP('create repair_details'))) {
+//                if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
                 $repair->status = 'invoice_generated';
 
                 // If the repair date was not set already then set it as today when the invoice pdf is generated
@@ -650,7 +664,8 @@ class RepairController extends Controller
             $repair = Repair::findOrFail($request->id);
             $loggedUser = Auth::user();
             // Invoice (Repair details) create repair_details | write repair_details
-            if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
+            if (($repair->repair_details_added && $loggedUser->CP('write repair_details')) || (!$repair->repair_details_added && $loggedUser->CP('create repair_details'))) {
+//                if (($repair->repair_details_added && $loggedUser->hasPermissionTo('write repair_details')) || (!$repair->repair_details_added && $loggedUser->hasPermissionTo('create repair_details'))) {
                 if (isset($request->invoice)) {
                     error_log("generateOffer - Invoice set in request. Update/Create invoice.");
                     $invoice = $repair->invoice;
@@ -916,7 +931,8 @@ class RepairController extends Controller
             $loggedUser = Auth::user();
 
             // REPAIRS
-            if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
+            if ($loggedUser->CPA(['write repairs', 'write repair_details'])) {
+//                if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
                 if (isset($request->rough_schedule_start)) $repair->rough_schedule_start = $request->rough_schedule_start;
                 if (isset($request->rough_schedule_end)) $repair->rough_schedule_end = $request->rough_schedule_end;
                 if (isset($request->exact_schedule_start)) $repair->exact_schedule_start = $request->exact_schedule_start;
@@ -950,7 +966,8 @@ class RepairController extends Controller
             $loggedUser = Auth::user();
 
             // REPAIRS
-            if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
+            if ($loggedUser->CPA(['write repairs', 'write repair_details'])) {
+//                if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
                 $repair->rough_schedule_start = $request->rough_schedule_start;
                 $repair->rough_schedule_end = $request->rough_schedule_end;
                 $repair->exact_schedule_start = $request->exact_schedule_start;
@@ -988,14 +1005,16 @@ class RepairController extends Controller
             $loggedUser = Auth::user();
 
             // Only Update the scheduled employees if the user has create or write repair details rights
-            if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
+            if (Auth::user()->CPA(['create repair_details', 'write repair_details'])) {
+//                if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
                 // Sync any scheduled employees changes
                 if (isset($request->scheduled_employees)) {
                     $scheduledEmployeesSync = $repair->syncOneToMany($request->scheduled_employees, $repair->scheduledEmployees());
                     error_log("Synced scheduled employees: " . json_encode($scheduledEmployeesSync));
                 }
             } else {
-                if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
+                if (!Auth::user()->CPA(['create repairs', 'write repairs'])) {
+//                    if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
                     $apiData['write repair_details'][] = "scheduled_employees";
                     return response()->json($apiData, 403);
                 }
@@ -1024,7 +1043,8 @@ class RepairController extends Controller
             $loggedUser = Auth::user();
 
             // REPAIRS
-            if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
+            if ($loggedUser->CPA(['write repairs', 'write repair_details'])) {
+//                if ($loggedUser->hasAnyPermission(['write repairs', 'write repair_details'])) {
                 if (isset($request->estimation)) $repair->estimation = $request->estimation;
             }
 

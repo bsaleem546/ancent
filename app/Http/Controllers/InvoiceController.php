@@ -30,7 +30,10 @@ class InvoiceController extends Controller
             $loggedUser = Auth::user();
 
             // Invoice
-            if ($loggedUser->hasPermissionTo('write repair_details') || $loggedUser->hasPermissionTo('create repair_details')) {
+//            if ($loggedUser->hasPermissionTo('write repair_details') ||
+//                $loggedUser->hasPermissionTo('create repair_details')) {
+            if ($loggedUser->CP('write repair_details') ||
+                $loggedUser->CP('create repair_details')) {
                 $repair = Repair::find($invoice->repair_id);
                 //If we have a repair - update the status to invoice paid
                 if ($repair) {
@@ -338,7 +341,10 @@ class InvoiceController extends Controller
             // if($loggedUser->hasAllPermissions(['access_internal_notes', 'read repairs']))
 
             // Invoice
-            if ($loggedUser->hasPermissionTo('write repair_details') || $loggedUser->hasPermissionTo('create repair_details')) {
+//            if ($loggedUser->hasPermissionTo('write repair_details') ||
+//                $loggedUser->hasPermissionTo('create repair_details')) {
+            if ($loggedUser->CP('write repair_details') ||
+                $loggedUser->CP('create repair_details')) {
                 /* if(isset($request->payment_date)) */
                 $invoice->payment_date = isset($request->payment_date) ? $request->payment_date : null;
                 // if(isset($request->invoicing_needed)) $invoice->invoicing_needed = ($request->invoicing_needed ? 1 : 0);
@@ -349,14 +355,16 @@ class InvoiceController extends Controller
 
 
             // Only Update the working hours and the repair replacements if the user has create or write repair details rights
-            if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
+            if (Auth::user()->CPA(['create repair_details', 'write repair_details'])) {
+//                if (Auth::user()->hasAnyPermission(['create repair_details', 'write repair_details'])) {
                 // Sync any extra services
                 if (isset($request->extra_services)) {
                     $extraServicesSync = $invoice->syncOneToMany($request->extra_services, $invoice->extraServices());
                     error_log("Synced extra services: " . json_encode($extraServicesSync));
                 }
             } else {
-                if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
+                if (!Auth::user()->CPA(['create repairs', 'write repairs'])) {
+//                    if (!Auth::user()->hasAnyPermission(['create repairs', 'write repairs'])) {
                     $apiData['write repair_details'][] = "extra_services";
                     return response()->json($apiData, 403);
                 }

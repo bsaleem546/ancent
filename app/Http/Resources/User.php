@@ -38,11 +38,11 @@ class User extends JsonResource
                 // 'fax' => (is_object($this->userDetails) && isset($this->userDetails->fax)) ? $this->userDetails->fax : "",
                 // 'sms' => (is_object($this->userDetails) && isset($this->userDetails->sms)) ? $this->userDetails->sms : "",
                 // 'notes' => (is_object($this->userDetails) && isset($this->userDetails->notes)) ? $this->userDetails->notes : "",
-                $this->mergeWhen(Auth::user()->hasPermissionTo('read customers'), [
+                $this->mergeWhen(Auth::user()->CP('read customers'), [
                     'customer_id' => (isset($this->userDetails->customer_id)) ? $this->userDetails->customer_id : "",
                     'customer' => (isset($this->userDetails->customer_id) && is_object($this->userDetails->customer) && isset($this->userDetails->customer)) ? $this->userDetails->customer->name : "",
                 ]),
-                $this->mergeWhen(Auth::user()->hasPermissionTo('read operators'), [
+                $this->mergeWhen(Auth::user()->CP('read operators'), [
                     'operator_id' => (isset($this->userDetails->operator_id)) ? $this->userDetails->operator_id : "",
                     'operator' => (isset($this->userDetails->operator_id) && is_object($this->userDetails->operator) && isset($this->userDetails->operator)) ? $this->userDetails->operator->name : "",
                 ]),

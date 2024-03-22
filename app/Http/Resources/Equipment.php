@@ -34,27 +34,27 @@ class Equipment extends JsonResource
             'manufacturer_id' => $this->manufacturer_id,
             // 'manufacturer' => $this->equipmentManufacturer,
             $this->mergeWhen(is_object($this->equipmentManufacturer), ['manufacturer' => (is_object($this->equipmentManufacturer) && isset($this->equipmentManufacturer->description)) ? $this->equipmentManufacturer->description : ""]),
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read locations'), [
+            $this->mergeWhen(Auth::user()->CP('read locations'), [
                 'location_id' => $this->location_id,
             ]),
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read customers'), [
+            $this->mergeWhen(Auth::user()->CP('read customers'), [
                 'customer_id' => $this->customer_id,
             ]),
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read operators'), [
+            $this->mergeWhen(Auth::user()->CP('read operators'), [
                 'operator_id' => $this->operator_id,
             ]),
             // 'notes' => (isset($this->notes)) ? $this->notes : "",
             // Only  send the internal_notes if the requesting user has access to internal notes
-            // $this->mergeWhen(Auth::user()->hasPermissionTo('access_internal_notes'), [
+            // $this->mergeWhen(Auth::user()->CP('access_internal_notes'), [
             //     'internal_notes' => (isset($this->internal_notes)) ? $this->internal_notes : "",
             // ]),
             'active' => $this->active,
             'maintenance_contract' => $this->maintenance_contract,
             // 'equipment_location_history' => EquipmentLocationHistoryResource::collection($this->equipmentLocationHistory),
             // 'repairs' => RepairResource::collection($this->repairs),
-            
+
             // Location section
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read locations') && is_object($this->location), [
+            $this->mergeWhen(Auth::user()->CP('read locations') && is_object($this->location), [
                 'l.name' => (is_object($this->location) && isset($this->location->name)) ? $this->location->name : "",
                 'l.street' => (is_object($this->location) && isset($this->location->street)) ? $this->location->street : "",
                 'l.postal_code' => (is_object($this->location) && isset($this->location->postal_code)) ? $this->location->postal_code : "",
@@ -68,7 +68,7 @@ class Equipment extends JsonResource
                 // 'l.email' => (is_object($this->location) && isset($this->location->email)) ? $this->location->email : "",
                 // 'l.gsm_email' => (is_object($this->location) && isset($this->location->gsm_email)) ? $this->location->gsm_email : "",
                 // 'l.notes' => (is_object($this->location) && isset($this->location->notes)) ? $this->location->notes : "",
-                // 'l.internal_notes' => $this->when(Auth::user()->hasPermissionTo('access_internal_notes'), (is_object($this->location) && isset($this->location->internal_notes)) ? $this->location->internal_notes : ""),
+                // 'l.internal_notes' => $this->when(Auth::user()->CP('access_internal_notes'), (is_object($this->location) && isset($this->location->internal_notes)) ? $this->location->internal_notes : ""),
                 // 'l.special_features' => (is_object($this->location) && isset($this->location->special_features)) ? $this->location->special_features : "",
                 // 'l.active_travel_cost' => (is_object($this->location) && isset($this->location->active_travel_cost)) ? $this->location->active_travel_cost : 0,
                 // 'l.travel_costs' => (is_object($this->location) && isset($this->location->travel_costs)) ? $this->location->travel_costs : 0.00,
@@ -78,9 +78,9 @@ class Equipment extends JsonResource
                 // 'l.active' => (is_object($this->location) && isset($this->location->active)) ? $this->location->active : 0,
                 // 'l.is_gsm' => (is_object($this->location) && isset($this->location->is_gsm)) ? $this->location->is_gsm : 0
             ]),
-            
+
             // Customer section
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read customers') && is_object($this->customer), [
+            $this->mergeWhen(Auth::user()->CP('read customers') && is_object($this->customer), [
                 'c.name' => (is_object($this->customer) && isset($this->customer->name)) ? $this->customer->name : "",
 
                 // We are not sending all of this data - can be uncommented if needed in the future
@@ -93,18 +93,18 @@ class Equipment extends JsonResource
                 // 'c.fax' => (is_object($this->customer) && isset($this->customer->fax)) ? $this->customer->fax : "",
                 // 'c.email' => (is_object($this->customer) && isset($this->customer->email)) ? $this->customer->email : "",
                 // 'c.notes' => (is_object($this->customer) && isset($this->customer->notes)) ? $this->customer->notes : "",
-                // 'c.internal_notes' => $this->when(Auth::user()->hasPermissionTo('access_internal_notes'), (is_object($this->customer) && isset($this->customer->internal_notes)) ? $this->customer->internal_notes : ""),
+                // 'c.internal_notes' => $this->when(Auth::user()->CP('access_internal_notes'), (is_object($this->customer) && isset($this->customer->internal_notes)) ? $this->customer->internal_notes : ""),
                 'c.id_rw' => (is_object($this->customer) && isset($this->customer->id_rw)) ? $this->customer->id_rw : 0,
                 // 'c.vat_id' => (is_object($this->customer) && isset($this->customer->vat_id)) ? $this->customer->vat_id : 0,
                 'c.invoice_prefix' => (is_object($this->customer) && isset($this->customer->invoice_prefix)) ? $this->customer->invoice_prefix : "",
                 // 'c.accounting_area' => (is_object($this->customer) && isset($this->customer->accounting_area)) ? $this->customer->accounting_area : "",
                 // 'c.active' => (is_object($this->customer) && isset($this->customer->active)) ? $this->customer->active : 0
             ]),
-            
+
             // Operator section
-            $this->mergeWhen(Auth::user()->hasPermissionTo('read operators') && is_object($this->operator), [
+            $this->mergeWhen(Auth::user()->CP('read operators') && is_object($this->operator), [
                 'o.name' => (is_object($this->operator) && isset($this->operator->name)) ? $this->operator->name : "",
-                
+
                 // We are not sending all of this data - can be uncommented if needed in the future
                 'o.street' => (is_object($this->operator) && isset($this->operator->street)) ? $this->operator->street : "",
                 'o.postal_code' => (is_object($this->operator) && isset($this->operator->postal_code)) ? $this->operator->postal_code : "",
@@ -116,7 +116,7 @@ class Equipment extends JsonResource
                 // 'o.email' => (is_object($this->operator) && isset($this->operator->email)) ? $this->operator->email : "",
                 // 'o.gsm_email' => (is_object($this->operator) && isset($this->operator->gsm_email)) ? $this->operator->gsm_email : "",
                 // 'o.notes' => (is_object($this->operator) && isset($this->operator->notes)) ? $this->operator->notes : "",
-                // 'o.internal_notes' => $this->when(Auth::user()->hasPermissionTo('access_internal_notes'), (is_object($this->operator) && isset($this->operator->internal_notes)) ? $this->operator->internal_notes : ""),
+                // 'o.internal_notes' => $this->when(Auth::user()->CP('access_internal_notes'), (is_object($this->operator) && isset($this->operator->internal_notes)) ? $this->operator->internal_notes : ""),
                 // 'o.active' => (is_object($this->operator) && isset($this->operator->active)) ? $this->operator->active : 0
             ])
         ];
