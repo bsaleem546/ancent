@@ -72,7 +72,10 @@ class User extends Authenticatable
             foreach($rights as $right) {
                 $text = $right.' '.$object;
                 if (in_array($text, $role_has_permissions)) {
-                    $permissions[] = $text;
+                    $permissions[] = [
+                        'user_id' => auth()->id(),
+                        'permission' => $text
+                    ];
                 }
                 $api_permissions[$object][$right] = in_array($text, $role_has_permissions);
             }
@@ -81,10 +84,15 @@ class User extends Authenticatable
         foreach ($extra as $extraPermissions) {
             $api_permissions[$extraPermissions] = in_array($extraPermissions, $role_has_permissions);
             if (in_array($extraPermissions, $role_has_permissions)) {
-                $permissions[] = $extraPermissions;
+                $permissions[] = [
+                    'user_id' => auth()->id(),
+                    'permission' => $extraPermissions
+                ];
             }
         }
 
+        DB::table('user_permissions')->where('user_id', auth()->id())->delete();
+        DB::table('user_permissions')->insert($permissions);
         session()->put('user_permissions', $permissions);
 
         $this->api_permissions = (object)$api_permissions;
@@ -93,14 +101,16 @@ class User extends Authenticatable
 
     public function CP($permission): bool
     {
-        return in_array($permission, session()->get('user_permissions'));
+        $permissions = DB::table('user_permissions')->where('user_id', auth()->id())->pluck('permission')->toArray();
+        return in_array($permission, $permissions);
     }
 
     public function CPA($permissions): bool
     {
+        $permissionsFromDB = DB::table('user_permissions')->where('user_id', auth()->id())->pluck('permission')->toArray();
         $check = false;
         foreach ($permissions as $permission) {
-            if (in_array($permission, session()->get('user_permissions'))) {
+            if (in_array($permission, $permissionsFromDB)) {
                 $check = true;
             }
         }
